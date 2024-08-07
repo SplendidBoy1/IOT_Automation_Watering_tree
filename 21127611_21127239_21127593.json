@@ -1,0 +1,1500 @@
+[
+    {
+        "id": "2ddbb98df7f0d927",
+        "type": "tab",
+        "label": "Flow 1",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "f5eca59b2ae10e78",
+        "type": "ui_form",
+        "z": "2ddbb98df7f0d927",
+        "name": "",
+        "label": "Register",
+        "group": "e90843366033320b",
+        "order": 1,
+        "width": 0,
+        "height": 0,
+        "options": [
+            {
+                "label": "Email",
+                "value": "email",
+                "type": "email",
+                "required": true,
+                "rows": null
+            },
+            {
+                "label": "Password",
+                "value": "password",
+                "type": "password",
+                "required": true,
+                "rows": null
+            },
+            {
+                "label": "Confirm Password",
+                "value": "conf_password",
+                "type": "password",
+                "required": true,
+                "rows": null
+            }
+        ],
+        "formValue": {
+            "email": "",
+            "password": "",
+            "conf_password": ""
+        },
+        "payload": "",
+        "submit": "Register",
+        "cancel": "",
+        "topic": "account",
+        "topicType": "str",
+        "splitLayout": "",
+        "className": "",
+        "x": 120,
+        "y": 820,
+        "wires": [
+            [
+                "dcbf3a24395bdfa8",
+                "329d8711549164a4"
+            ]
+        ]
+    },
+    {
+        "id": "d4a8d6eacb33e134",
+        "type": "function",
+        "z": "2ddbb98df7f0d927",
+        "name": "function 4",
+        "func": "\nmsg.payload = {\n        tabs: {\n            hide: ['Home'],\n            show: ['Login', 'Register']\n        }\n}\n\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 400,
+        "y": 140,
+        "wires": [
+            [
+                "f0772852a5f0dad1"
+            ]
+        ]
+    },
+    {
+        "id": "dcbf3a24395bdfa8",
+        "type": "firebase-get",
+        "z": "2ddbb98df7f0d927",
+        "name": "",
+        "constraint": {
+            "orderByChild": "email",
+            "equalTo": {
+                "value": "payload.email",
+                "type": "msg"
+            }
+        },
+        "database": "272afd114439c2ba",
+        "outputType": "auto",
+        "passThrough": false,
+        "path": "account",
+        "pathType": "str",
+        "useConstraint": true,
+        "x": 240,
+        "y": 720,
+        "wires": [
+            [
+                "3b7845da15d130ef"
+            ]
+        ]
+    },
+    {
+        "id": "3b7845da15d130ef",
+        "type": "function",
+        "z": "2ddbb98df7f0d927",
+        "name": "function 7",
+        "func": "if (msg.payload == null){\n    msg.payload = true\n    msg.topic = 'success'\n}\nelse{\n    \n    msg.payload = true\n    msg.topic = 'failure'\n}\n\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 420,
+        "y": 680,
+        "wires": [
+            [
+                "329d8711549164a4"
+            ]
+        ]
+    },
+    {
+        "id": "073008a4ec517e57",
+        "type": "switch",
+        "z": "2ddbb98df7f0d927",
+        "name": "",
+        "property": "topic",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "eq",
+                "v": "success",
+                "vt": "str"
+            },
+            {
+                "t": "eq",
+                "v": "failure",
+                "vt": "str"
+            }
+        ],
+        "checkall": "true",
+        "repair": false,
+        "outputs": 2,
+        "x": 790,
+        "y": 900,
+        "wires": [
+            [
+                "1cfd737444164104"
+            ],
+            [
+                "e4e1a28d8a3f0a38"
+            ]
+        ]
+    },
+    {
+        "id": "18de2393061675bd",
+        "type": "firebase-out",
+        "z": "2ddbb98df7f0d927",
+        "name": "",
+        "database": "272afd114439c2ba",
+        "path": "account",
+        "pathType": "str",
+        "priority": 1,
+        "queryType": "push",
+        "x": 1180,
+        "y": 640,
+        "wires": []
+    },
+    {
+        "id": "1cfd737444164104",
+        "type": "function",
+        "z": "2ddbb98df7f0d927",
+        "name": "function 8",
+        "func": "msg.payload = {\n    email: msg.payload.account.email,\n    pass: msg.payload.account.pass\n}\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 880,
+        "y": 680,
+        "wires": [
+            [
+                "18de2393061675bd",
+                "36ea2246e8f430d5"
+            ]
+        ]
+    },
+    {
+        "id": "329d8711549164a4",
+        "type": "join",
+        "z": "2ddbb98df7f0d927",
+        "name": "",
+        "mode": "custom",
+        "build": "object",
+        "property": "payload",
+        "propertyType": "msg",
+        "key": "topic",
+        "joiner": "\\n",
+        "joinerType": "str",
+        "accumulate": false,
+        "timeout": "",
+        "count": "2",
+        "reduceRight": false,
+        "reduceExp": "",
+        "reduceInit": "",
+        "reduceInitType": "",
+        "reduceFixup": "",
+        "x": 470,
+        "y": 920,
+        "wires": [
+            [
+                "35348973e46ffe27"
+            ]
+        ]
+    },
+    {
+        "id": "b9c515660ff34bc1",
+        "type": "ui_toast",
+        "z": "2ddbb98df7f0d927",
+        "position": "dialog",
+        "displayTime": "3",
+        "highlight": "",
+        "sendall": true,
+        "outputs": 1,
+        "ok": "OK",
+        "cancel": "",
+        "raw": false,
+        "className": "",
+        "topic": "notification",
+        "name": "",
+        "x": 1110,
+        "y": 940,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "e4e1a28d8a3f0a38",
+        "type": "function",
+        "z": "2ddbb98df7f0d927",
+        "name": "function 9",
+        "func": "msg.payload = 'Email has been taken or confirm password does not match'\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 920,
+        "y": 980,
+        "wires": [
+            [
+                "b9c515660ff34bc1"
+            ]
+        ]
+    },
+    {
+        "id": "6dbdaf9d39a7c2f6",
+        "type": "ui_form",
+        "z": "2ddbb98df7f0d927",
+        "name": "",
+        "label": "Login",
+        "group": "7e1c46b925607785",
+        "order": 1,
+        "width": 0,
+        "height": 0,
+        "options": [
+            {
+                "label": "Email",
+                "value": "email",
+                "type": "email",
+                "required": true,
+                "rows": null
+            },
+            {
+                "label": "Password",
+                "value": "password",
+                "type": "password",
+                "required": true,
+                "rows": null
+            }
+        ],
+        "formValue": {
+            "email": "",
+            "password": ""
+        },
+        "payload": "",
+        "submit": "Login",
+        "cancel": "",
+        "topic": "account",
+        "topicType": "str",
+        "splitLayout": "",
+        "className": "",
+        "x": 110,
+        "y": 420,
+        "wires": [
+            [
+                "92d69aef5a2e636a",
+                "e03c654b18f169f7"
+            ]
+        ]
+    },
+    {
+        "id": "92d69aef5a2e636a",
+        "type": "firebase-get",
+        "z": "2ddbb98df7f0d927",
+        "name": "",
+        "constraint": {
+            "orderByChild": "email",
+            "equalTo": {
+                "value": "payload.email",
+                "type": "msg"
+            }
+        },
+        "database": "272afd114439c2ba",
+        "outputType": "auto",
+        "passThrough": false,
+        "path": "account",
+        "pathType": "str",
+        "useConstraint": true,
+        "x": 380,
+        "y": 280,
+        "wires": [
+            [
+                "db52dbd06b111c9f"
+            ]
+        ]
+    },
+    {
+        "id": "94f0625887d6fbd7",
+        "type": "function",
+        "z": "2ddbb98df7f0d927",
+        "name": "function 10",
+        "func": "if (msg.payload.hasOwnProperty('failure')){\n    msg.payload = true\n    msg.topic = 'failure'\n}\nelse{\n    if (msg.payload.account.password === msg.payload.acc.pass) {\n        msg.payload = true\n        msg.topic = 'success'\n    }\n    else {\n        msg.payload = true\n        msg.topic = 'failure'\n    }\n}\n\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 830,
+        "y": 380,
+        "wires": [
+            [
+                "dc62691d1c38d230"
+            ]
+        ]
+    },
+    {
+        "id": "dc62691d1c38d230",
+        "type": "switch",
+        "z": "2ddbb98df7f0d927",
+        "name": "",
+        "property": "topic",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "eq",
+                "v": "success",
+                "vt": "str"
+            },
+            {
+                "t": "eq",
+                "v": "failure",
+                "vt": "str"
+            }
+        ],
+        "checkall": "true",
+        "repair": false,
+        "outputs": 2,
+        "x": 890,
+        "y": 500,
+        "wires": [
+            [
+                "99ff73e4da68b971"
+            ],
+            [
+                "8eea9e4faa748f5e"
+            ]
+        ]
+    },
+    {
+        "id": "62e20e9e1a7fdc65",
+        "type": "ui_toast",
+        "z": "2ddbb98df7f0d927",
+        "position": "dialog",
+        "displayTime": "3",
+        "highlight": "",
+        "sendall": true,
+        "outputs": 1,
+        "ok": "OK",
+        "cancel": "",
+        "raw": false,
+        "className": "",
+        "topic": "notification",
+        "name": "",
+        "x": 1350,
+        "y": 540,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "8eea9e4faa748f5e",
+        "type": "function",
+        "z": "2ddbb98df7f0d927",
+        "name": "function 12",
+        "func": "msg.payload = 'Account has not been registerd or wrong password'\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 1110,
+        "y": 520,
+        "wires": [
+            [
+                "62e20e9e1a7fdc65"
+            ]
+        ]
+    },
+    {
+        "id": "e03c654b18f169f7",
+        "type": "join",
+        "z": "2ddbb98df7f0d927",
+        "name": "",
+        "mode": "custom",
+        "build": "object",
+        "property": "payload",
+        "propertyType": "msg",
+        "key": "topic",
+        "joiner": "\\n",
+        "joinerType": "str",
+        "accumulate": false,
+        "timeout": "",
+        "count": "2",
+        "reduceRight": false,
+        "reduceExp": "",
+        "reduceInit": "",
+        "reduceInitType": "",
+        "reduceFixup": "",
+        "x": 570,
+        "y": 420,
+        "wires": [
+            [
+                "94f0625887d6fbd7"
+            ]
+        ]
+    },
+    {
+        "id": "db52dbd06b111c9f",
+        "type": "function",
+        "z": "2ddbb98df7f0d927",
+        "name": "function 13",
+        "func": "if (msg.payload == null){\n    msg.payload = true\n    msg.topic = 'failure'\n}\nelse{\n    const data = msg.payload\n    for(const key in data){\n        msg.payload = data[key]\n    }\n    msg.topic = \"acc\"\n}\n\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 550,
+        "y": 280,
+        "wires": [
+            [
+                "e03c654b18f169f7"
+            ]
+        ]
+    },
+    {
+        "id": "36ea2246e8f430d5",
+        "type": "function",
+        "z": "2ddbb98df7f0d927",
+        "name": "function 14",
+        "func": "msg.payload = {\n    tab: 'Login',\n}\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 1240,
+        "y": 820,
+        "wires": [
+            [
+                "74e82140d7b32b10"
+            ]
+        ]
+    },
+    {
+        "id": "3da01ec40e93b691",
+        "type": "ui_gauge",
+        "z": "2ddbb98df7f0d927",
+        "name": "",
+        "group": "6ffb8676a877f21e",
+        "order": 2,
+        "width": 0,
+        "height": 0,
+        "gtype": "wave",
+        "title": "Water Level Sensor",
+        "label": "%",
+        "format": "{{msg.payload.field1}}",
+        "min": 0,
+        "max": "100",
+        "colors": [
+            "#00b500",
+            "#e6e600",
+            "#ca3838"
+        ],
+        "seg1": "",
+        "seg2": "",
+        "diff": false,
+        "className": "",
+        "x": 910,
+        "y": 1620,
+        "wires": []
+    },
+    {
+        "id": "33a486f1f57bf419",
+        "type": "ui_gauge",
+        "z": "2ddbb98df7f0d927",
+        "name": "",
+        "group": "6ffb8676a877f21e",
+        "order": 3,
+        "width": 0,
+        "height": 0,
+        "gtype": "gage",
+        "title": "Temperature",
+        "label": "C degree",
+        "format": "{{msg.payload.field2}}",
+        "min": 0,
+        "max": "75",
+        "colors": [
+            "#00b500",
+            "#e6e600",
+            "#ca3838"
+        ],
+        "seg1": "",
+        "seg2": "",
+        "diff": false,
+        "className": "",
+        "x": 930,
+        "y": 1760,
+        "wires": []
+    },
+    {
+        "id": "d5b229e8679947c4",
+        "type": "mqtt in",
+        "z": "2ddbb98df7f0d927",
+        "name": "",
+        "topic": "/treeInfo/temperature",
+        "qos": "2",
+        "datatype": "auto-detect",
+        "broker": "9564b4ed83a2eaf1",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 280,
+        "y": 2140,
+        "wires": [
+            [
+                "ee8dcd370b807af3"
+            ]
+        ]
+    },
+    {
+        "id": "a51af54366030d90",
+        "type": "mqtt in",
+        "z": "2ddbb98df7f0d927",
+        "name": "",
+        "topic": "/treeInfo/soilHumidity",
+        "qos": "2",
+        "datatype": "auto-detect",
+        "broker": "9564b4ed83a2eaf1",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 280,
+        "y": 2260,
+        "wires": [
+            [
+                "ee8dcd370b807af3"
+            ]
+        ]
+    },
+    {
+        "id": "45bfe7020e0acc2a",
+        "type": "mqtt in",
+        "z": "2ddbb98df7f0d927",
+        "name": "",
+        "topic": "/waterContainer/waterLevel",
+        "qos": "2",
+        "datatype": "auto-detect",
+        "broker": "9564b4ed83a2eaf1",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 290,
+        "y": 2380,
+        "wires": [
+            [
+                "ee8dcd370b807af3"
+            ]
+        ]
+    },
+    {
+        "id": "35348973e46ffe27",
+        "type": "function",
+        "z": "2ddbb98df7f0d927",
+        "name": "function 17",
+        "func": "if (msg.payload.hasOwnProperty('failure')){\n    msg.payload = true\n    msg.topic = 'failure'\n}\nelse{\n    if (msg.payload.account.password === msg.payload.account.conf_password) {\n        msg.payload = {\n            account: {\n                email: msg.payload.account.email,\n                pass: msg.payload.account.password\n            }\n        }\n        msg.topic = 'success'\n    }\n    else {\n        msg.payload = true\n        msg.topic = 'failure'\n    }\n}\n\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 630,
+        "y": 820,
+        "wires": [
+            [
+                "073008a4ec517e57"
+            ]
+        ]
+    },
+    {
+        "id": "39f91041c247ce74",
+        "type": "http request",
+        "z": "2ddbb98df7f0d927",
+        "name": "",
+        "method": "GET",
+        "ret": "txt",
+        "paytoqs": "query",
+        "url": "https://api.thingspeak.com/update?api_key=MAG0ISJA5UA0QSZS",
+        "tls": "",
+        "persist": false,
+        "proxy": "",
+        "insecureHTTPParser": false,
+        "authType": "",
+        "senderr": false,
+        "headers": [],
+        "x": 910,
+        "y": 1520,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "13ffdbaac5af5e7e",
+        "type": "function",
+        "z": "2ddbb98df7f0d927",
+        "name": "function 18",
+        "func": "\nmsg.payload = {\n    field1: msg.payload[\"/waterContainer/waterLevel\"],\n    field2: msg.payload[\"/treeInfo/temperature\"],\n    field3: msg.payload[\"/treeInfo/soilHumidity\"],\n    }\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 470,
+        "y": 1760,
+        "wires": [
+            [
+                "33a486f1f57bf419",
+                "3da01ec40e93b691",
+                "39f91041c247ce74",
+                "cebd858bf5d47e5b",
+                "331bce5a0bb230c5"
+            ]
+        ]
+    },
+    {
+        "id": "74e82140d7b32b10",
+        "type": "ui_ui_control",
+        "z": "2ddbb98df7f0d927",
+        "name": "",
+        "events": "all",
+        "x": 1420,
+        "y": 820,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "f0772852a5f0dad1",
+        "type": "ui_ui_control",
+        "z": "2ddbb98df7f0d927",
+        "name": "",
+        "events": "all",
+        "x": 760,
+        "y": 140,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "168094617b0c85ec",
+        "type": "ui_chart",
+        "z": "2ddbb98df7f0d927",
+        "name": "",
+        "group": "c09ba663951259af",
+        "order": 1,
+        "width": 0,
+        "height": 0,
+        "label": "Water Sensor Chart",
+        "chartType": "line",
+        "legend": "false",
+        "xformat": "HH:mm:ss",
+        "interpolate": "linear",
+        "nodata": "",
+        "dot": false,
+        "ymin": "",
+        "ymax": "",
+        "removeOlder": 1,
+        "removeOlderPoints": "",
+        "removeOlderUnit": "3600",
+        "cutout": 0,
+        "useOneColor": false,
+        "useUTC": false,
+        "colors": [
+            "#1f77b4",
+            "#aec7e8",
+            "#ff7f0e",
+            "#2ca02c",
+            "#98df8a",
+            "#d62728",
+            "#ff9896",
+            "#9467bd",
+            "#c5b0d5"
+        ],
+        "outputs": 1,
+        "useDifferentColor": false,
+        "className": "",
+        "x": 770,
+        "y": 1380,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "06e6f15388804fc4",
+        "type": "inject",
+        "z": "2ddbb98df7f0d927",
+        "name": "",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "30",
+        "crontab": "",
+        "once": true,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 170,
+        "y": 1300,
+        "wires": [
+            [
+                "38b76d02dd51ccb1"
+            ]
+        ]
+    },
+    {
+        "id": "38b76d02dd51ccb1",
+        "type": "http request",
+        "z": "2ddbb98df7f0d927",
+        "name": "",
+        "method": "GET",
+        "ret": "obj",
+        "paytoqs": "ignore",
+        "url": "https://api.thingspeak.com/channels/2385527/fields/1.json?api_key=E7A0DAAYOOOPCQDQ&result=100",
+        "tls": "",
+        "persist": false,
+        "proxy": "",
+        "insecureHTTPParser": false,
+        "authType": "",
+        "senderr": false,
+        "headers": [],
+        "x": 350,
+        "y": 1140,
+        "wires": [
+            [
+                "02e61f02c44daacd"
+            ]
+        ]
+    },
+    {
+        "id": "02e61f02c44daacd",
+        "type": "function",
+        "z": "2ddbb98df7f0d927",
+        "name": "function 19",
+        "func": "const data = []\nfor (const i in msg.payload.feeds){\n    data[i] = { \"x\": msg.payload.feeds[i].entry_id, \"y\": msg.payload.feeds[i].field1}\n}\n\nmsg.payload = [{\n    \"series\": [\"A\"],\n    \"data\": [\n        data\n    ],\n    \"labels\": [\"A\"]\n}]\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 510,
+        "y": 1260,
+        "wires": [
+            [
+                "168094617b0c85ec"
+            ]
+        ]
+    },
+    {
+        "id": "75fd685967ee9c01",
+        "type": "ui_chart",
+        "z": "2ddbb98df7f0d927",
+        "name": "",
+        "group": "c09ba663951259af",
+        "order": 2,
+        "width": 0,
+        "height": 0,
+        "label": "Temperature",
+        "chartType": "line",
+        "legend": "false",
+        "xformat": "HH:mm:ss",
+        "interpolate": "linear",
+        "nodata": "",
+        "dot": false,
+        "ymin": "",
+        "ymax": "",
+        "removeOlder": 1,
+        "removeOlderPoints": "",
+        "removeOlderUnit": "3600",
+        "cutout": 0,
+        "useOneColor": false,
+        "useUTC": false,
+        "colors": [
+            "#1f77b4",
+            "#aec7e8",
+            "#ff7f0e",
+            "#2ca02c",
+            "#98df8a",
+            "#d62728",
+            "#ff9896",
+            "#9467bd",
+            "#c5b0d5"
+        ],
+        "outputs": 1,
+        "useDifferentColor": false,
+        "className": "",
+        "x": 1710,
+        "y": 1400,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "0c544da5893c1f0c",
+        "type": "inject",
+        "z": "2ddbb98df7f0d927",
+        "name": "",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "30",
+        "crontab": "",
+        "once": true,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 1130,
+        "y": 1320,
+        "wires": [
+            [
+                "1c357c60b8150131"
+            ]
+        ]
+    },
+    {
+        "id": "1c357c60b8150131",
+        "type": "http request",
+        "z": "2ddbb98df7f0d927",
+        "name": "",
+        "method": "GET",
+        "ret": "obj",
+        "paytoqs": "ignore",
+        "url": "https://api.thingspeak.com/channels/2385527/fields/2.json?api_key=E7A0DAAYOOOPCQDQ&result=100",
+        "tls": "",
+        "persist": false,
+        "proxy": "",
+        "insecureHTTPParser": false,
+        "authType": "",
+        "senderr": false,
+        "headers": [],
+        "x": 1310,
+        "y": 1160,
+        "wires": [
+            [
+                "81ac31c5e3dcff70"
+            ]
+        ]
+    },
+    {
+        "id": "81ac31c5e3dcff70",
+        "type": "function",
+        "z": "2ddbb98df7f0d927",
+        "name": "function 20",
+        "func": "const data = []\nfor (const i in msg.payload.feeds){\n    data[i] = { \"x\": msg.payload.feeds[i].entry_id, \"y\": msg.payload.feeds[i].field2}\n}\n\nmsg.payload = [{\n    \"series\": [\"A\"],\n    \"data\": [\n        data\n    ],\n    \"labels\": [\"\"]\n}]\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 1470,
+        "y": 1280,
+        "wires": [
+            [
+                "75fd685967ee9c01"
+            ]
+        ]
+    },
+    {
+        "id": "b03f6f45d36dba98",
+        "type": "ui_chart",
+        "z": "2ddbb98df7f0d927",
+        "name": "",
+        "group": "c09ba663951259af",
+        "order": 3,
+        "width": 0,
+        "height": 0,
+        "label": "Soil Moisture Sensor",
+        "chartType": "line",
+        "legend": "false",
+        "xformat": "HH:mm:ss",
+        "interpolate": "linear",
+        "nodata": "",
+        "dot": false,
+        "ymin": "",
+        "ymax": "",
+        "removeOlder": 1,
+        "removeOlderPoints": "",
+        "removeOlderUnit": "3600",
+        "cutout": 0,
+        "useOneColor": false,
+        "useUTC": false,
+        "colors": [
+            "#1f77b4",
+            "#aec7e8",
+            "#ff7f0e",
+            "#2ca02c",
+            "#98df8a",
+            "#d62728",
+            "#ff9896",
+            "#9467bd",
+            "#c5b0d5"
+        ],
+        "outputs": 1,
+        "useDifferentColor": false,
+        "className": "",
+        "x": 1800,
+        "y": 1780,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "97670878fe7232fc",
+        "type": "inject",
+        "z": "2ddbb98df7f0d927",
+        "name": "",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "30",
+        "crontab": "",
+        "once": true,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 1190,
+        "y": 1700,
+        "wires": [
+            [
+                "05c9b6f2417dbb3f"
+            ]
+        ]
+    },
+    {
+        "id": "05c9b6f2417dbb3f",
+        "type": "http request",
+        "z": "2ddbb98df7f0d927",
+        "name": "",
+        "method": "GET",
+        "ret": "obj",
+        "paytoqs": "ignore",
+        "url": "https://api.thingspeak.com/channels/2385527/fields/3.json?api_key=E7A0DAAYOOOPCQDQ&result=100",
+        "tls": "",
+        "persist": false,
+        "proxy": "",
+        "insecureHTTPParser": false,
+        "authType": "",
+        "senderr": false,
+        "headers": [],
+        "x": 1370,
+        "y": 1540,
+        "wires": [
+            [
+                "45686736ad7ea792"
+            ]
+        ]
+    },
+    {
+        "id": "45686736ad7ea792",
+        "type": "function",
+        "z": "2ddbb98df7f0d927",
+        "name": "function 21",
+        "func": "const data = []\nfor (const i in msg.payload.feeds){\n    data[i] = { \"x\": msg.payload.feeds[i].entry_id, \"y\": msg.payload.feeds[i].field3}\n}\n\nmsg.payload = [{\n    \"series\": [\"A\"],\n    \"data\": [\n        data\n    ],\n    \"labels\": [\"\"]\n}]\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 1530,
+        "y": 1660,
+        "wires": [
+            [
+                "b03f6f45d36dba98"
+            ]
+        ]
+    },
+    {
+        "id": "70f18d2eedaf5e53",
+        "type": "inject",
+        "z": "2ddbb98df7f0d927",
+        "name": "",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "1",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 250,
+        "y": 140,
+        "wires": [
+            [
+                "d4a8d6eacb33e134"
+            ]
+        ]
+    },
+    {
+        "id": "d5e1a7eb5ea091cd",
+        "type": "function",
+        "z": "2ddbb98df7f0d927",
+        "name": "function 22",
+        "func": "var check = global.get(\"Switch_Fan\")\nif (check == 0){\n    msg.payload = true\n    global.set(\"Switch_Fan\", 1)\n}\nelse{\n    msg.payload = false\n    global.set(\"Switch_Fan\", 0)\n}\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 590,
+        "y": 3360,
+        "wires": [
+            [
+                "62c854f1763c9bce",
+                "d42542167be74af9",
+                "80dea62c377f61a8"
+            ]
+        ]
+    },
+    {
+        "id": "6bec5b81c262d23c",
+        "type": "ui_button",
+        "z": "2ddbb98df7f0d927",
+        "name": "",
+        "group": "4dec7ee7e929b9db",
+        "order": 2,
+        "width": 0,
+        "height": 0,
+        "passthru": false,
+        "label": "Remote Fan",
+        "tooltip": "",
+        "color": "",
+        "bgcolor": "",
+        "className": "",
+        "icon": "",
+        "payload": "",
+        "payloadType": "str",
+        "topic": "topic",
+        "topicType": "msg",
+        "x": 310,
+        "y": 3360,
+        "wires": [
+            [
+                "d5e1a7eb5ea091cd"
+            ]
+        ]
+    },
+    {
+        "id": "99ff73e4da68b971",
+        "type": "function",
+        "z": "2ddbb98df7f0d927",
+        "name": "function 15",
+        "func": "msg.payload = {\n    tab: 'Home',\n    tabs: {\n        show: ['Home'],\n        hide: ['Register', 'Login']\n    }\n}\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 1290,
+        "y": 320,
+        "wires": [
+            [
+                "b4f94d9f1308beb6"
+            ]
+        ]
+    },
+    {
+        "id": "b4f94d9f1308beb6",
+        "type": "ui_ui_control",
+        "z": "2ddbb98df7f0d927",
+        "name": "",
+        "events": "all",
+        "x": 1460,
+        "y": 320,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "a39cbe64fc3901b2",
+        "type": "inject",
+        "z": "2ddbb98df7f0d927",
+        "name": "",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": true,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 270,
+        "y": 3060,
+        "wires": [
+            [
+                "0a8d54f12e91630f"
+            ]
+        ]
+    },
+    {
+        "id": "0a8d54f12e91630f",
+        "type": "function",
+        "z": "2ddbb98df7f0d927",
+        "name": "function 23",
+        "func": "msg.payload = global.set('count', 0);\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 510,
+        "y": 3060,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "ee8dcd370b807af3",
+        "type": "join",
+        "z": "2ddbb98df7f0d927",
+        "name": "",
+        "mode": "custom",
+        "build": "object",
+        "property": "payload",
+        "propertyType": "msg",
+        "key": "topic",
+        "joiner": "\\n",
+        "joinerType": "str",
+        "accumulate": false,
+        "timeout": "",
+        "count": "3",
+        "reduceRight": false,
+        "reduceExp": "",
+        "reduceInit": "",
+        "reduceInitType": "",
+        "reduceFixup": "",
+        "x": 690,
+        "y": 2040,
+        "wires": [
+            [
+                "13ffdbaac5af5e7e"
+            ]
+        ]
+    },
+    {
+        "id": "62c854f1763c9bce",
+        "type": "mqtt out",
+        "z": "2ddbb98df7f0d927",
+        "name": "",
+        "topic": "/fanState/currentState",
+        "qos": "2",
+        "retain": "",
+        "respTopic": "",
+        "contentType": "",
+        "userProps": "",
+        "correl": "",
+        "expiry": "",
+        "broker": "9564b4ed83a2eaf1",
+        "x": 940,
+        "y": 3500,
+        "wires": []
+    },
+    {
+        "id": "cebd858bf5d47e5b",
+        "type": "debug",
+        "z": "2ddbb98df7f0d927",
+        "name": "debug 1",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 660,
+        "y": 1520,
+        "wires": []
+    },
+    {
+        "id": "d1531f0267703a1b",
+        "type": "ui_text",
+        "z": "2ddbb98df7f0d927",
+        "group": "6ffb8676a877f21e",
+        "order": 3,
+        "width": 0,
+        "height": 0,
+        "name": "",
+        "label": "Soil Sensor",
+        "format": "{{msg.payload}}",
+        "layout": "row-spread",
+        "className": "",
+        "style": false,
+        "font": "",
+        "fontSize": 16,
+        "color": "#000000",
+        "x": 1170,
+        "y": 1880,
+        "wires": []
+    },
+    {
+        "id": "331bce5a0bb230c5",
+        "type": "function",
+        "z": "2ddbb98df7f0d927",
+        "name": "function 24",
+        "func": "\nvar data = msg.payload.field3\nif (data == 1){\n    msg.payload = \"Dry\"\n}\nelse msg.payload = \"Wet\"\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 890,
+        "y": 1860,
+        "wires": [
+            [
+                "d1531f0267703a1b"
+            ]
+        ]
+    },
+    {
+        "id": "d42542167be74af9",
+        "type": "ui_switch",
+        "z": "2ddbb98df7f0d927",
+        "name": "",
+        "label": "Fan's state",
+        "tooltip": "",
+        "group": "4dec7ee7e929b9db",
+        "order": 1,
+        "width": 0,
+        "height": 0,
+        "passthru": false,
+        "decouple": "true",
+        "topic": "topic",
+        "topicType": "msg",
+        "style": "",
+        "onvalue": "true",
+        "onvalueType": "bool",
+        "onicon": "",
+        "oncolor": "",
+        "offvalue": "false",
+        "offvalueType": "bool",
+        "officon": "",
+        "offcolor": "",
+        "animate": false,
+        "className": "",
+        "x": 890,
+        "y": 3240,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "80dea62c377f61a8",
+        "type": "debug",
+        "z": "2ddbb98df7f0d927",
+        "name": "debug 2",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 680,
+        "y": 3160,
+        "wires": []
+    },
+    {
+        "id": "a857d96f615d3f1f",
+        "type": "ui_spacer",
+        "z": "2ddbb98df7f0d927",
+        "name": "spacer",
+        "group": "6ffb8676a877f21e",
+        "order": 1,
+        "width": 4,
+        "height": 1
+    },
+    {
+        "id": "e90843366033320b",
+        "type": "ui_group",
+        "name": "Register",
+        "tab": "9e3598e681cfae1d",
+        "order": 1,
+        "disp": false,
+        "width": "6",
+        "collapse": false,
+        "className": ""
+    },
+    {
+        "id": "272afd114439c2ba",
+        "type": "database-config",
+        "name": "Cloud_IOT",
+        "authType": "anonymous",
+        "claims": {},
+        "createUser": false,
+        "useClaims": false
+    },
+    {
+        "id": "7e1c46b925607785",
+        "type": "ui_group",
+        "name": "Login",
+        "tab": "51fb34a5fd26e3f9",
+        "order": 1,
+        "disp": false,
+        "width": "6",
+        "collapse": false,
+        "className": ""
+    },
+    {
+        "id": "6ffb8676a877f21e",
+        "type": "ui_group",
+        "name": "Information of input device",
+        "tab": "9a88034da11d0fa5",
+        "order": 1,
+        "disp": true,
+        "width": 4,
+        "collapse": false,
+        "className": ""
+    },
+    {
+        "id": "9564b4ed83a2eaf1",
+        "type": "mqtt-broker",
+        "name": "",
+        "broker": "broker.mqtt-dashboard.com",
+        "port": "1883",
+        "clientid": "",
+        "autoConnect": true,
+        "usetls": false,
+        "protocolVersion": "4",
+        "keepalive": "60",
+        "cleansession": true,
+        "autoUnsubscribe": true,
+        "birthTopic": "",
+        "birthQos": "0",
+        "birthRetain": "false",
+        "birthPayload": "",
+        "birthMsg": {},
+        "closeTopic": "",
+        "closeQos": "0",
+        "closeRetain": "false",
+        "closePayload": "",
+        "closeMsg": {},
+        "willTopic": "",
+        "willQos": "0",
+        "willRetain": "false",
+        "willPayload": "",
+        "willMsg": {},
+        "userProps": "",
+        "sessionExpiry": ""
+    },
+    {
+        "id": "c09ba663951259af",
+        "type": "ui_group",
+        "name": "Chart show each field",
+        "tab": "9a88034da11d0fa5",
+        "order": 2,
+        "disp": true,
+        "width": "6",
+        "collapse": false,
+        "className": ""
+    },
+    {
+        "id": "4dec7ee7e929b9db",
+        "type": "ui_group",
+        "name": "Remote control fan",
+        "tab": "9a88034da11d0fa5",
+        "order": 3,
+        "disp": true,
+        "width": "6",
+        "collapse": false,
+        "className": ""
+    },
+    {
+        "id": "9e3598e681cfae1d",
+        "type": "ui_tab",
+        "name": "Register",
+        "icon": "dashboard",
+        "order": 3,
+        "disabled": false,
+        "hidden": true
+    },
+    {
+        "id": "51fb34a5fd26e3f9",
+        "type": "ui_tab",
+        "name": "Login",
+        "icon": "dashboard",
+        "disabled": false,
+        "hidden": true
+    },
+    {
+        "id": "9a88034da11d0fa5",
+        "type": "ui_tab",
+        "name": "Home",
+        "icon": "dashboard",
+        "disabled": false,
+        "hidden": true
+    }
+]
